@@ -1,4 +1,4 @@
-import {Client, Wallet, Amount, CheckCreate, CheckCancel} from "xrpl";
+import {Client, Wallet, Amount, CheckCreate, CheckCancel, CheckCash} from "xrpl";
 
 
 export async function sendCheck(amount:string, to_address:string, token?: string) {
@@ -117,39 +117,39 @@ export async function cancelCheck(checkId:string) {
   }
 }
 
-// export async function cashCheck(checkId:string) {
-//   if (!process.env.WALLET_SECRETKEY) {
-//     throw new Error(
-//     "WALLET_SECRETKEY environment variable is not set. You need to set it to send a transaction"
-//     );
-//   }
+export async function cashCheck(checkId:string) {
+  if (!process.env.WALLET_SECRETKEY) {
+    throw new Error(
+    "WALLET_SECRETKEY environment variable is not set. You need to set it to send a transaction"
+    );
+  }
 
-//   if (!process.env.XRPL_SERVER) {
-//       throw new Error(
-//         "XRPL_SERVER environment variable is not set. You need to set it to send a transaction"
-//       );
-//     }
+  if (!process.env.XRPL_SERVER) {
+      throw new Error(
+        "XRPL_SERVER environment variable is not set. You need to set it to send a transaction"
+      );
+    }
 
-//   const server = new Client(process.env.XRPL_SERVER);
-//   const wallet = Wallet.fromSecret(process.env.WALLET_SECRETKEY);
+  const server = new Client(process.env.XRPL_SERVER);
+  const wallet = Wallet.fromSecret(process.env.WALLET_SECRETKEY);
 
-//   await server.connect();
+  await server.connect();
 
-//   const cancel_check_tx = {
-//     "TransactionType": "CheckCancel",
-//     "Account": wallet.address,
-//     "CheckID": checkId
-//   } as CheckCancel;
+  const cancel_check_tx = {
+    "TransactionType": "CheckCash",
+    "Account": wallet.address,
+    "CheckID": checkId
+  } as CheckCash;
 
 
-//   const cancel_prepared = await server.autofill(cancel_check_tx)
-//   const cancel_signed = wallet.sign(cancel_prepared);
-//   const check_result = await server.submitAndWait(cancel_signed.tx_blob);
+  const cancel_prepared = await server.autofill(cancel_check_tx)
+  const cancel_signed = wallet.sign(cancel_prepared);
+  const check_result = await server.submitAndWait(cancel_signed.tx_blob);
 
-//   await server.disconnect();
-//   if(check_result.result.meta.TransactionResult == "tesSUCCESS") {
-//     return `Success, tx hash: ${check_result.result.hash}`
-//   } else {
-//     return 'Error sending transaction';
-//   }
-// }
+  await server.disconnect();
+  if(check_result.result.meta.TransactionResult == "tesSUCCESS") {
+    return `Success, tx hash: ${check_result.result.hash}`
+  } else {
+    return 'Error sending transaction';
+  }
+}

@@ -26,6 +26,7 @@ WRITE OPERATIONS:
 - Create a new offer between 2 tokens/coins using create_offer
 - Cancel an offer using cancel_offer
 - Create an AMM (Automated Market Maker) for 2 tokens/coins using create_amm
+- Cash a check using cash_check
 
 When executing operations:
 1. ALWAYS use reasonable defaults when specific values aren't provided:

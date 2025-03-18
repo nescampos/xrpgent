@@ -11,6 +11,7 @@ import { getOffersTool } from "./getOffers";
 import { cancelOfferTool } from "./cancelOffer";
 import { createAMMTool } from "./createAMM";
 import { getAMMsTool } from "./getAMMS";
+import { cashCheckTool } from "./cashCheck";
 
 export interface ToolConfig<T = any> {
   /**
@@ -91,4 +92,8 @@ export const tools: Record<string, ToolConfig> = {
    * Create an AMM
    */
    create_amm: createAMMTool,
+  /**
+   * Cash a check
+   */
+   cash_check: cashCheckTool,
 };
