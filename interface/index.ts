@@ -19,6 +19,9 @@ export interface GetBalanceArgs {
   hash: string;
 }
 
+export interface CancelCheckArgs {
+  checkId: string;
+}
 
 // No arguments needed since we're getting the connected wallet
 export interface GetWalletAddressArgs {}

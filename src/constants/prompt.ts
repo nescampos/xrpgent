@@ -14,9 +14,13 @@ READ OPERATIONS:
 - Retrieve connected wallet address using get_wallet_address
 - Retrieve the native balance in XRP for the wallet using get_balance
 - Retrieve the balances of tokens for the wallet using get_token_balances
+- Get the checks in a wallet using get_checks
+- Get the last transactions of a wallet using get_transactions
 
 WRITE OPERATIONS:
 - Send coins and tokens using send_transaction
+- Create a send a new check using send_check
+- Cancel a check using cancel_check
 
 When executing operations:
 1. ALWAYS use reasonable defaults when specific values aren't provided:

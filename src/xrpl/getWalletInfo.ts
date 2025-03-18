@@ -1,4 +1,4 @@
-import {Client, Wallet, dropsToXrp} from "xrpl";
+import {Client, Wallet, AccountTxV1Response} from "xrpl";
 
 /**
  * Get the address from the secret key in the environment file
@@ -78,5 +78,30 @@ export async function getAddress() {
     const tokenBalances = await server.getBalances(wallet.address);
     await server.disconnect();
     return tokenBalances.map((token) => `Currency: ${token.currency}, Amount: ${token.value}, Issuer: ${token.issuer}`).join("\n") ;
+}
+
+
+
+export async function getLast10Transactions(account: string) {
+  if (!process.env.XRPL_SERVER) {
+    throw new Error(
+      "XRPL_SERVER environment variable is not set. You need to set it to create a wallet client."
+    );
+  }
+
+  const client = new Client(process.env.XRPL_SERVER);
+  await client.connect();
+
+  const response = await client.request({
+    command: "account_tx",
+    account: account,
+    ledger_index_min: -1,
+    ledger_index_max: -1,
+    limit: 10,
+  }) as AccountTxV1Response;
+
+  client.disconnect();
+
+  return response.result.transactions.map((tx: any) => `Hash: ${tx.hash}, Ledger: ${tx.ledger_index}, Date: ${tx.close_time_iso}`).join("\n");
 }
 
