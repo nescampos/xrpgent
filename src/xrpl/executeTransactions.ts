@@ -1,4 +1,4 @@
-import {Client, Wallet, xrpToDrops} from "xrpl";
+import {Client, Wallet, xrpToDrops, Payment, TrustSet} from "xrpl";
 
 
 export async function sendXRP(amount:string, to_address:string) {
@@ -31,50 +31,53 @@ export async function sendXRP(amount:string, to_address:string) {
     return tx;
 }
 
-// export async function sendFungibleToken(tokenId:string, amount:string, to_address:string) {
-//     // Check if the mnemonic environment variable is set
-//     if (!process.env.WALLET_MNEMONIC) {
-//         throw new Error(
-//         "WALLET_MNEMONIC environment variable is not set. You need to set it to create a wallet client."
-//         );
-//     }
-//     // Create a wallet from the mnemonic
-//     const wallet = await generateWallet({
-//         secretKey: process.env.WALLET_MNEMONIC,
-//         password: '',
-//     });
-//     const tokenData = tokenId.split(".");
-//     const address = privateKeyToAddress(wallet.accounts[0].stxPrivateKey, 'mainnet');
-//     const decimalResult = await fetchCallReadOnlyFunction({
-//         contractName: tokenData[1],
-//         contractAddress: tokenData[0],
-//         functionName: "get-decimals",
-//         functionArgs:[],
-//         senderAddress:address,
-//         network:"mainnet"
-//       });
-//     const formattedAmount =  Number(amount) * 10**Number(decimalResult.value.value);
-//     const postConditions = Pc.principal(address)
-//         .willSendEq(formattedAmount)
-//         .ft(tokenId, "sbtc-token");
+export async function sendFungibleToken(tokenId:string, amount:string, to_address:string) {
+  if (!process.env.WALLET_SECRETKEY) {
+        throw new Error(
+        "WALLET_SECRETKEY environment variable is not set. You need to set it to send a transaction"
+        );
+    }
 
-//     const transaction = await makeContractCall({
-//         contractName: tokenData[1],
-//         contractAddress: tokenData[0],
-//         functionName: "transfer",
-//         functionArgs:[
-//             Cl.uint(formattedAmount), // amount to transfer
-//             Cl.principal(address), // sender address
-//             Cl.principal(to_address), // recipient address
-//             Cl.none()], // optional memo - passing none
-//         senderKey: wallet.accounts[0].stxPrivateKey,
-//         validateWithAbi: true,
-//         network: "mainnet",
-//         postConditions: [postConditions],
-//         postConditionMode: PostConditionMode.Deny,
-//       });
-    
+    if (!process.env.XRPL_SERVER) {
+        throw new Error(
+          "XRPL_SERVER environment variable is not set. You need to set it to send a transaction"
+        );
+      }
 
-//     const tx_result = await broadcastTransaction({ transaction, network:"mainnet" });
-//     return tx_result;
-// }
+    const server = new Client(process.env.XRPL_SERVER);
+    const wallet = Wallet.fromSecret(process.env.WALLET_SECRETKEY);
+
+    await server.connect();
+
+    const trustSet_tx = {
+      "TransactionType": "TrustSet",
+      "Account": to_address,
+      "LimitAmount": {
+        "currency": tokenId,
+        "issuer": wallet.address,
+        "value": amount
+      } 
+    } as TrustSet;
+
+    const ts_prepared = await server.autofill(trustSet_tx);
+    const ts_signed = wallet.sign(ts_prepared);
+    const ts_result = await server.submitAndWait(ts_signed.tx_blob)
+
+    const send_token_tx = {
+      "TransactionType": "Payment",
+      "Account": wallet.address,
+      "Amount": {
+        "currency": tokenId,
+        "value": amount,
+        "issuer": wallet.address
+      },
+      "Destination": to_address
+    } as Payment;
+
+    const pay_prepared = await server.autofill(send_token_tx)
+
+    const signed = wallet.sign(pay_prepared);
+    const tx = await server.submitAndWait(signed.tx_blob)
+    await server.disconnect();
+    return tx;
+}
