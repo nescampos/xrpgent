@@ -75,9 +75,8 @@ export async function getAddress() {
     const wallet = Wallet.fromSecret(process.env.WALLET_SECRETKEY);
 
     await server.connect();
-    const tokenBalances = server.getBalances(wallet.address);
-    
+    const tokenBalances = await server.getBalances(wallet.address);
     await server.disconnect();
-    return tokenBalances;
+    return tokenBalances.map((token) => `Currency: ${token.currency}, Amount: ${token.value}, Issuer: ${token.issuer}`).join("\n") ;
 }
 
