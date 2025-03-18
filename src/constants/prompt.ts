@@ -17,13 +17,15 @@ READ OPERATIONS:
 - Get the checks in a wallet using get_checks
 - Get the last transactions of a wallet using get_transactions
 - Get the offers between 2 tokens/coins in a wallet using get_offers
+- Get the AMMs (Automated Market Makers) using get_amms
 
 WRITE OPERATIONS:
 - Send coins and tokens using send_transaction
 - Create a send a new check using send_check
 - Cancel a check using cancel_check
 - Create a new offer between 2 tokens/coins using create_offer
-- Cancel aa offer using cancel_offer
+- Cancel an offer using cancel_offer
+- Create an AMM (Automated Market Maker) for 2 tokens/coins using create_amm
 
 When executing operations:
 1. ALWAYS use reasonable defaults when specific values aren't provided:

@@ -34,6 +34,19 @@ export interface CreateOfferArgs {
   token_to?: string;
 }
 
+export interface CreateAMMArgs {
+  amount_from: string;
+  amount_to: string;
+  token_from?: string;
+  token_to?: string;
+  tradingfee?:string
+}
+
+export interface GetAMMArgs {
+  token_from: string;
+  token_to: string;
+}
+
 // No arguments needed since we're getting the connected wallet
 export interface GetWalletAddressArgs {}
 

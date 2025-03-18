@@ -9,6 +9,8 @@ import { getTransactionsTool } from "./getTransactions";
 import { createOfferTool } from "./createOffer";
 import { getOffersTool } from "./getOffers";
 import { cancelOfferTool } from "./cancelOffer";
+import { createAMMTool } from "./createAMM";
+import { getAMMsTool } from "./getAMMS";
 
 export interface ToolConfig<T = any> {
   /**
@@ -59,6 +61,10 @@ export const tools: Record<string, ToolConfig> = {
    * Get the offers of a wallet address.
    */
    get_offers: getOffersTool,
+  /**
+   * Get the AMMs of a wallet address.
+   */
+   get_amms: getAMMsTool,
 
 
   /**
@@ -81,4 +87,8 @@ export const tools: Record<string, ToolConfig> = {
    * Cancel an offer
    */
    cancel_offer: cancelOfferTool,
+  /**
+   * Create an AMM
+   */
+   create_amm: createAMMTool,
 };
