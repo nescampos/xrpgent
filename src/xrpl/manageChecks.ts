@@ -1,4 +1,3 @@
-import { createSemanticDiagnosticsBuilderProgram } from "typescript";
 import {Client, Wallet, Amount, CheckCreate, CheckCancel} from "xrpl";
 
 

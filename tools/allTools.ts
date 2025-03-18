@@ -6,6 +6,9 @@ import { createCheckTool } from "./createCheck";
 import { getChecksTool } from "./getChecks";
 import { cancelCheckTool } from "./cancelCheck";
 import { getTransactionsTool } from "./getTransactions";
+import { createOfferTool } from "./createOffer";
+import { getOffersTool } from "./getOffers";
+import { cancelOfferTool } from "./cancelOffer";
 
 export interface ToolConfig<T = any> {
   /**
@@ -52,6 +55,10 @@ export const tools: Record<string, ToolConfig> = {
    * Get the last transactions of a wallet address.
    */
    get_transactions: getTransactionsTool,
+  /**
+   * Get the offers of a wallet address.
+   */
+   get_offers: getOffersTool,
 
 
   /**
@@ -66,4 +73,12 @@ export const tools: Record<string, ToolConfig> = {
    * Cancel a check
    */
    cancel_check: cancelCheckTool,
+  /**
+   * Create an offer
+   */
+   create_offer: createOfferTool,
+  /**
+   * Cancel an offer
+   */
+   cancel_offer: cancelOfferTool,
 };

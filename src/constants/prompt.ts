@@ -16,11 +16,14 @@ READ OPERATIONS:
 - Retrieve the balances of tokens for the wallet using get_token_balances
 - Get the checks in a wallet using get_checks
 - Get the last transactions of a wallet using get_transactions
+- Get the offers between 2 tokens/coins in a wallet using get_offers
 
 WRITE OPERATIONS:
 - Send coins and tokens using send_transaction
 - Create a send a new check using send_check
 - Cancel a check using cancel_check
+- Create a new offer between 2 tokens/coins using create_offer
+- Cancel aa offer using cancel_offer
 
 When executing operations:
 1. ALWAYS use reasonable defaults when specific values aren't provided:

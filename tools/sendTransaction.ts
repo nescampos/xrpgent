@@ -1,4 +1,4 @@
-import { sendXRP } from "../src/xrpl/executeTransactions";
+import { sendXRP, sendFungibleToken } from "../src/xrpl/executeTransactions";
 import type { ToolConfig } from "./allTools.js"; // Type definition for tool configurations
 import type { SendTransactionArgs } from "../interface/index.js"; // Type definition for send transaction arguments
 
@@ -50,7 +50,7 @@ async function sendTransaction({
     if(token == undefined || token == "") {
       tx = await sendXRP(value,to);
     } else {
-      tx = await sendXRP(value,to);
+      tx = await sendFungibleToken(token, value,to);
     } 
     
     return {
